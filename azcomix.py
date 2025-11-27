@@ -3,9 +3,11 @@
 from bs4 import BeautifulSoup as bs
 from PIL import Image
 from dotenv import load_dotenv
+from io import BytesIO
 import requests as rq
 import dropbox
 import os, sys
+import mimetypes
 
 search_url = "https://azcomix.me/ajax/search?q="
 url = "https://azcomix.net/comic/"
@@ -58,10 +60,13 @@ def get_comic_issue(url: str):
 
 def images_to_pdf(src_list, name):
     image_list = []
+    i = 0
     for src in src_list:
-        img = Image.open(rq.get(src, stream=True).raw)
-        image = img.convert("RGB")
-        image_list.append(image)
+        img_res = rq.get(src, stream=True)
+        img_res.raise_for_status()
+        img = Image.open(BytesIO(img_res.content)).convert("RGB")
+        image_list.append(img)
+
     image_list[0].save(
         f"./{name}.pdf",
         "PDF",

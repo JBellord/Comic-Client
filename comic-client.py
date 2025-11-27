@@ -79,7 +79,8 @@ def get_issues():
                 .replace("(", "")
                 .replace(")", "")
             )
-            joint(scrape_issue_page(selected_issue_src), filename)
+            image_list = scrape_issue_page(selected_issue_src)
+            joint(image_list, filename)
             console.log(f"[cyan]Uploaded: {filename}")
         console.log(f"[red]Done.")
 
